@@ -1,0 +1,35 @@
+Configuration:
+  status: warn
+  name: YamlConfiguration
+  properties:
+    property:
+      name: fileName
+      value: test-yaml.log
+  appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d{yyyy年MM月dd日 HH:mm:ss} [yml] %msg %m%n"
+    File:
+      name: File
+      fileName: ${fileName}
+      PatternLayout:
+        Pattern: "%d{yyyy年MM月dd日 HH:mm:ss} [yml] [%t] %msg %m%n"
+  Loggers:
+    logger:
+      -
+        name: test1
+        level: debug
+        additivity: false
+        AppenderRef:
+          ref: STDOUT
+      -
+        name: test2
+        level: debug
+        additivity: false
+        AppenderRef:
+          ref: File
+    Root:
+      level: error
+      AppenderRef:
+        ref: STDOUT

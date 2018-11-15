@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    monitorInterval : reconfiguration的间隔时间：s
+    advertiser : 广播,需要jmdns依赖包
+    name : 配置名字
+    packages : 插件包路径，多个逗号隔开
+
+-->
+<Configuration status="WARN" monitorInterval="10" name="xmlConfiguration" strict="true">
+    <Properties>
+        <Property name="fileName">test-xml.log</Property>
+    </Properties>
+
+    <!--
+        AsyncAppender                   : Async
+        FailoverAppender                : Failover
+        ConsoleAppender                 : Console
+        CassandraAppender               : Cassandra
+        FileAppender                    : File
+        FlumeAppender                   : Flume
+        JDBCAppender                    : JDBC
+        JMSAppender                     : JMS
+        JPAAppender                     : JPA
+        HttpAppender                    : Http
+        KafkaAppender                   : Kafka
+        MemoryMappedFileAppender        : MemoryMappedFile
+        NoSQLAppender                   : NoSql
+        OutputStreamAppender            :
+        RandomAccessFileAppender        : RandomAccessFile
+        RewriteAppender                 : Rewrite
+        RollingFileAppender             : RollingFile
+        RollingRandomAccessFileAppender : RollingRandomAccessFile
+        RoutingAppender                 : Routing
+        SMTPAppender                    : SMTP
+        SocketAppender                  : Socket
+        SyslogAppender                  : Syslog - - - > TLSSyslog[use SSL]
+        ZeroMQ/JeroMQAppender           : JeroMQ
+
+    -->
+    <Appenders>
+        <!-- 控制台Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy年MM月dd日 HH:mm:ss} [xml] %msg%n"></PatternLayout>
+
+        </Console>
+
+        <File name="File" fileName="${fileName}" filePermissions="rw-rw-rw-">
+            <PatternLayout pattern="%d{yyyy年MM月dd日 HH:mm:ss} [xml] [%t] %msg %m%n"></PatternLayout>
+        </File>
+        <RollingFile name="RollingFile" fileName="test-rolling-xml.log" filePattern="test-rolling-%d{yyyy-MM-dd HH:mm}-xml.log" ignoreExceptions="false">
+            <PatternLayout>
+                <Pattern>%d{yyyy年MM月dd日 HH:mm:ss} [rolling-xml] %msg%n</Pattern>
+            </PatternLayout>
+            <TimeBasedTriggeringPolicy/>
+        </RollingFile>
+
+        <Failover name="Failover" primary="RollingFile">
+            <Failovers>
+                <AppenderRef ref="Console"></AppenderRef>
+            </Failovers>
+        </Failover>
+    </Appenders>
+
+    <Loggers>
+        <!-- 级别：
+        all > trace > debug > info > warn > error
+        -->
+
+        <!-- 每一个配置都会有一个root Logger,不配置系统也会给一个默认的level=error,appender=console的root
+            与普通logger的区别:没有name,additivity属性
+         -->
+        <Root level="debug">
+            <AppenderRef ref="Console"></AppenderRef>
+
+        </Root>
+        <!--
+            name:除了root，都会有一个name
+            additivity:阻止父子传递
+        -->
+        <Logger name="test1xml" level="debug" additivity="false">
+            <AppenderRef ref="Console"></AppenderRef>
+        </Logger>
+        <Logger name="test2xml" level="debug" additivity="false">
+            <AppenderRef ref="File"></AppenderRef>
+        </Logger>
+        <Logger name="test3xml" level="debug" additivity="false">
+            <AppenderRef ref="RollingFile"></AppenderRef>
+        </Logger>
+    </Loggers>
+</Configuration>
